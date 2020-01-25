@@ -17,10 +17,21 @@ process_bus_data <- function(data_file){
   indices <- nb_data_points * seq(1, nb_buses)
 
   indices <- c(0, indices)
-  
-  map(indices, ~`[`(data_file, (. + 1):(. + nb_data_points) ))
+
+  sep_data_sets <- map(indices, ~`[`(data_file, (. + 1):(. + nb_data_points) ))
+
+  headers_list <- map(sep_data_sets, ~`[`(., 1:11))
+
+  header_elements <- c("bus number", "month purchased", "year purchased",
+                       "month of 1st engine replacement", "year of 1st engine replacement",
+                       "odometer at replacement", "month of 2nd replacement",
+                       "year of 2nd replacement", "odometer at replacement",
+                       "month odometer data begins", "year odometer data begins")
+
+  named_headers <- map(headers_list, ~set_names(., header_elements))
+
 
 }
 
 
-map(data_files, process_bus_data)
+headers_list <- map(data_files, process_bus_data)

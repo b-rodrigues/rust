@@ -1,4 +1,5 @@
 library(tidyverse)
+library(lubridate)
 
 data_file_path <- Sys.glob("datasets/*.asc")
 
@@ -95,3 +96,17 @@ process_bus_data <- function(data_file){
 }
 
 processed_data <- map(data_files, process_bus_data)
+
+processed_data <- processed_data %>%
+    map(bind_rows)
+
+dataset_names <- str_remove_all(data_file_path, "datasets/|\\.asc")
+
+processed_data <- set_names(processed_data, dataset_names)
+
+processed_data <- processed_data %>%
+    map(., ~filter(., !is.na(bus_id)))
+
+walk2(.x = processed_data,
+      .y = dataset_names,
+      ~write_csv(.x, path = paste0("datasets/processed_data/", .y, ".csv")))

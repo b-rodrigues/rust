@@ -110,3 +110,8 @@ processed_data <- processed_data %>%
 walk2(.x = processed_data,
       .y = dataset_names,
       ~write_csv(.x, path = paste0("datasets/processed_data/", .y, ".csv")))
+
+all_data <- processed_data %>%
+    bind_rows()
+
+write_csv(all_data, "datasets/processed_data/all_buses.csv")

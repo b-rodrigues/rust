@@ -86,7 +86,7 @@ process_bus_data <- function(data_file){
   raw_data <- raw_data %>%
       map(~mutate(., date = fill_dates(date)))
 
-  raw_data <- map(raw_data, ~mutate(., "replacement_1" = if_else(date == first_replacement_date, 1, 0)))
+  raw_data <- map(raw_data, ~mutate(., "replacement_1" = if_else(date == first_replacement_date, 1, 0, 0)))
   raw_data <- map(raw_data, ~mutate(., "replacement_2" = if_else(date == second_replacement_date, 1, 0, 0)))
   raw_data <- map(raw_data, ~mutate(., replacement = replacement_1 + replacement_2))
   raw_data <- map(raw_data, ~select(., bus_id, date, odometer_reading, replacement,
